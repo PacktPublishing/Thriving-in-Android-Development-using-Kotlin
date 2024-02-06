@@ -13,7 +13,7 @@ import kotlinx.coroutines.withContext
 
 class NewsFeedViewModel(
     private val getTheNewsFeedUseCase: GetTheNewsFeedUseCase,
-    private val dispatcher: CoroutineDispatcher = Dispatchers.IO // IO optimized dispatcher
+    private val dispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : ViewModel() {
     private val _posts = MutableStateFlow<List<Post>>(emptyList())
     val posts: StateFlow<List<Post>> get() = _posts
@@ -24,7 +24,7 @@ class NewsFeedViewModel(
 
     private fun loadInitialPosts() {
         viewModelScope.launch {
-            val newPosts = withContext(dispatcher) { // Switching to IO dispatcher
+            val newPosts = withContext(dispatcher) {
                 getTheNewsFeedUseCase(fromTheBeginning = true)
             }
             _posts.value = newPosts
@@ -33,7 +33,7 @@ class NewsFeedViewModel(
 
     fun loadMorePosts() {
         viewModelScope.launch {
-            val newPosts = withContext(dispatcher) { // Switching to IO dispatcher
+            val newPosts = withContext(dispatcher) {
                 getTheNewsFeedUseCase(fromTheBeginning = false)
             }
             val updatedPosts = (_posts.value + newPosts).takeLast(60)
@@ -41,34 +41,4 @@ class NewsFeedViewModel(
         }
     }
 }
-
-
-
-/**
-private val _isRefreshing = MutableStateFlow<Boolean>(false)
-val isRefreshing: StateFlow<Boolean> get() = _isRefreshing
-**/
-/**
- *
-private var currentPage = 0
-
-init {
-loadMorePosts()
-}
-
-fun loadMorePosts() {
-viewModelScope.launch {
-_isRefreshing.value = true
-val newPosts = postRepository.getPosts(currentPage)
-_posts.value = newPosts
-currentPage++
-_isRefreshing.value = false
-}
-}
-
-fun refreshPosts() {
-currentPage = 0
-loadMorePosts()
-}
- */
 

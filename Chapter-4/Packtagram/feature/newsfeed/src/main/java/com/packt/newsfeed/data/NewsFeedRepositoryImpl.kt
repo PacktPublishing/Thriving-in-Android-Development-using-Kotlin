@@ -17,7 +17,7 @@ class NewsFeedRepositoryImpl(
             .also { currentPage++ }
     }
 
-    fun resetPagination() {
+    override fun resetPagination() {
         currentPage = 0
     }
 }

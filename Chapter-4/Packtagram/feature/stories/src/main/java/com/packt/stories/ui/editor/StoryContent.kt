@@ -68,133 +68,95 @@ import java.util.concurrent.Executor
 import java.util.concurrent.Executors
 
 @Composable
+
 fun StoryContent(
+
     isEditing: Boolean = false,
-    onImageCaptured: (Bitmap) -> Any,
-    onVideoCaptured: (File) -> Any,
-    modifier: Modifier = Modifier,
+
+    modifier: Modifier = Modifier
+
 ) {
-    val localContext = LocalContext.current
-    val cameraProviderFuture = remember { ProcessCameraProvider.getInstance(localContext) }
-    var videoCapture:VideoCapture<Recorder>? by remember { mutableStateOf(null) }
-    var recording: Recording? by remember { mutableStateOf(null) }
-    val cameraController: LifecycleCameraController = remember { LifecycleCameraController(localContext) }
 
-    fun capturePhoto(
-        context: Context,
-        cameraController: LifecycleCameraController,
-        onPhotoCaptured: (Bitmap) -> Unit,
-        onError: (Exception) -> Unit
-    ) {
-        val mainExecutor: Executor = ContextCompat.getMainExecutor(context)
+    Box(modifier = Modifier
+        .fillMaxSize()
+        .padding(20.dp)) {
 
-        cameraController.takePicture(mainExecutor, @ExperimentalGetImage object : ImageCapture.OnImageCapturedCallback() {
-            override fun onCaptureSuccess(image: ImageProxy) {
-                try {
-                    CoroutineScope(Dispatchers.IO).launch {
-                        val correctedBitmap: Bitmap? = image
-                            ?.image
-                            ?.toBitmap()
-                            ?.rotateBitmap(image.imageInfo.rotationDegrees)
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight()
 
-                        correctedBitmap?.let {
-                            withContext(Dispatchers.Main) {
-                                onPhotoCaptured(correctedBitmap)
-                            }
-                        }
-
-                        image.close()
-                    }
-                } catch (e: Exception) {
-                    onError(e)
-                } finally {
-                    image.close()
-                }
-            }
-
-            override fun onError(exception: ImageCaptureException) {
-                Log.e("CameraContent", "Error capturing image", exception)
-                onError(exception)
-         }
-        })
-    }
-
-
-    Box(modifier = Modifier.fillMaxSize()) {
-
-CameraPermissionRequester {
-    videoCapture = cameraVideoPreview(cameraProviderFuture, modifier = Modifier.fillMaxSize())
-}
-
-        Box(modifier = Modifier
-            .fillMaxWidth()
-            .wrapContentHeight()
         ) {
-            Button(onClick = { /*Handle back*/}, modifier = Modifier.align(Alignment.TopStart)) {
-                Image(painter = painterResource(id = R.drawable.ic_arrow_back), contentDescription = "Back button")
+
+            Button(onClick = { /*Handle back*/ }, modifier = Modifier.align(Alignment.TopStart)) {
+
+                Image(
+                    painter = painterResource(id = R.drawable.ic_arrow_back),
+                    contentDescription = "Back button"
+                )
+
             }
+
             if (isEditing) {
-                Button(onClick = { /* Handle create caption */ }, modifier = Modifier.align(Alignment.TopEnd)) {
-                    Image(painter = painterResource(id = R.drawable.ic_caption), contentDescription = "Create label")
+
+                Button(
+                    onClick = { /* Handle create caption */ },
+                    modifier = Modifier.align(Alignment.TopEnd)
+                ) {
+
+                    Image(
+                        painter = painterResource(id = R.drawable.ic_caption),
+                        contentDescription = "Create label"
+                    )
+
                 }
+
             }
+
         }
 
-        Row(modifier = Modifier
-            .wrapContentHeight()
-            .padding(10.dp)
-            .align(Alignment.BottomCenter)) {
+
+
+        Image(
+            painter = painterResource(id = R.drawable.ic_default_image),
+            modifier = Modifier.fillMaxSize(),
+            contentDescription = "Default image"
+        )
+
+
+
+        Row(
+            modifier = Modifier
+                .wrapContentHeight()
+                .align(Alignment.BottomCenter)
+        ) {
+
             if (isEditing) {
+
                 Button(onClick = { /* Handle create caption */ }) {
+
                     Text(stringResource(id = R.string.share_story))
+
                 }
+
             } else {
+
                 OutlinedButton(
-                    onClick = {
-                        videoCapture?.let {
-                            if (recording == null) {
-                                recording = startRecording(it, localContext)
-                            } else {
-                                stopRecording(recording)
-                                recording = null
-                            }
-                        }
-                    },
+                    onClick = { /* Handle take a photo */ },
                     modifier = Modifier.size(50.dp),
                     shape = CircleShape,
                     border = BorderStroke(4.dp, MaterialTheme.colorScheme.primary),
                     contentPadding = PaddingValues(0.dp),
                     colors = ButtonDefaults.outlinedButtonColors(contentColor = MaterialTheme.colorScheme.primary)
+
                 ) {
+
                 }
+
             }
+
         }
-    }
-}
 
-@SuppressLint("MissingPermission")
-fun startRecording(videoCapture: VideoCapture<Recorder>, context: Context): Recording {
-    val videoFile = File(context.getExternalFilesDir(null), "video.mp4")
-    val outputFileOptions = FileOutputOptions.Builder(videoFile).build()
-
-    val listenerExecutor = Executors.newSingleThreadExecutor() // Executor for handling events
-
-    val listener = Consumer<VideoRecordEvent> { event ->
-        when (event) {
-            is VideoRecordEvent.Finalize -> {
-                if (event.hasError()) {
-                    // Check if there was an error finalizing the recording
-                }
-                // Process the recorded video file if needed
-            }
-        }
     }
 
-    return videoCapture.output.prepareRecording(context, outputFileOptions)
-        .withAudioEnabled()
-        .start(listenerExecutor, listener)
-}
-
-fun stopRecording(recording: Recording?) {
-    recording?.stop()
 }

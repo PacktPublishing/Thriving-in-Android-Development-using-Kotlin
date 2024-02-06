@@ -12,20 +12,29 @@ import androidx.compose.ui.tooling.preview.Preview
 import org.koin.androidx.compose.koinViewModel
 
 @Preview
+
 @OptIn(ExperimentalMaterial3Api::class)
+
 @Composable
+
 fun StoryEditorScreen(
+
     viewModel: StoryEditorViewModel = koinViewModel()
+
 ) {
+
     val isEditing = viewModel.isEditing.collectAsState()
+
     Column(modifier = Modifier.fillMaxSize()) {
+
         if (isEditing.value) {
+
             TopAppBar(title = { Text(text = "Create Story") })
+
         }
-        StoryContent(
-            isEditing.value,
-            onImageCaptured = { viewModel.storePhotoInGallery(it) },
-            onVideoCaptured = {}
-        )
+
+        StoryContent(isEditing.value)
+
     }
+
 }
