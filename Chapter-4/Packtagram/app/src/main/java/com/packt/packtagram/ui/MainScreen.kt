@@ -10,6 +10,8 @@ import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.PlayArrow
 import androidx.compose.material.icons.outlined.Search
+import androidx.compose.material.icons.rounded.MailOutline
+import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.material.icons.rounded.Send
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -46,7 +48,7 @@ fun MainScreen(
                 },
                 actions = {
                     IconButton(onClick = { /* Menu action */ }) {
-                        Icon(Icons.Rounded.Send, contentDescription = "Messages")
+                        Icon(Icons.Rounded.MailOutline, contentDescription = "Messages")
                     }
                 }
             )
