@@ -1,0 +1,69 @@
+[versions]
+agp = "8.3.0-alpha18"
+kotlin = "1.9.0"
+coreKtx = "1.12.0"
+junit = "4.13.2"
+junitVersion = "1.1.5"
+espressoCore = "3.5.1"
+lifecycleRuntimeKtx = "2.7.0"
+activityCompose = "1.8.2"
+composeBom = "2023.08.00"
+navigationCompose = "2.5.3"
+appcompat = "1.6.1"
+hiltVersion = "2.48"
+retrofit = "2.9.0"
+moshi = "1.12.0"
+coroutines = "1.5.1"
+datastore = "1.0.0"
+hiltNavigation = "1.0.0"
+materialAndroid = "1.8.0"
+coil = "2.4.0"
+exoplayer = "1.2.1"
+mediarouter = "1.7.0"
+google-cast = "21.4.0"
+
+[libraries]
+androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+junit = { group = "junit", name = "junit", version.ref = "junit" }
+androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
+androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
+androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
+androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
+androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
+androidx-ui = { group = "androidx.compose.ui", name = "ui" }
+androidx-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
+androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
+androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
+androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
+androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
+androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+androidxHilt = { module = "com.google.dagger:hilt-android", name = "hilt", version.ref = "hiltVersion" }
+hiltCompiler = { module = "com.google.dagger:hilt-android-compiler", name = "hilt-compiler", version.ref = "hiltVersion" }
+hiltNavigation = { module = "androidx.hilt:hilt-navigation", version.ref="hiltNavigation"}
+hiltNavigationCompose = { module = "androidx.hilt:hilt-navigation-compose", version.ref="hiltNavigation"}
+coil = { module = "io.coil-kt:coil-compose", name="coil-compose", version.ref="coil"}
+retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref="retrofit"}
+retrofitMoshiConverter = { group = "com.squareup.retrofit2", name = "converter-moshi", version.ref="retrofit"}
+moshi = { group = "com.squareup.moshi", name = "moshi", version.ref = "moshi" }
+moshiKotlin = { group = "com.squareup.moshi", name = "moshi-kotlin", version.ref = "moshi" }
+moshiKotlinCodegen = { group = "com.squareup.moshi", name = "moshi-kotlin-codegen", version.ref = "moshi" }
+coroutinesCore = {  group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutines" }
+coroutinesAndroid = {  group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines" }
+datastore = { module = "androidx.datastore:datastore-preferences", version.ref = "datastore" }
+exoplayer = { group = "com.androidx.media3", name="media3-exoplayer", version.ref="exoplayer" }
+exoplayerUi = { group = "com.androidx.media3", name="media3-ui", version.ref="exoplayer" }
+mediaRouter = { group = "androidx.mediarouter", name="mediarouter", version.ref="mediarouter"}
+googleCast = { group = "com.google.android.gms", name="play-services-cast-framework", version.ref="google-cast"}
+
+
+
+[plugins]
+androidApplication = { id = "com.android.application", version.ref = "agp" }
+androidLibrary= { id = "com.android.library", version.ref = "agp" }
+jetbrainsKotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+jetbrainsKotlinKapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
+hilt = { id = "com.google.dagger.hilt.android", version.ref = "hiltVersion" }
+
+
+
