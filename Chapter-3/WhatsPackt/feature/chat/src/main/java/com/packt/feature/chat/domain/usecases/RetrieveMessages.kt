@@ -8,7 +8,7 @@ import javax.inject.Inject
 class RetrieveMessages @Inject constructor(
     private val repository: IMessagesRepository
 ) {
-    suspend operator fun invoke(chatId: String): Flow<Message> {
-        return repository.getMessages(chatId, "userId")
+    suspend operator fun invoke(chatId: String, userId: String): Flow<Message> {
+        return repository.getMessages(chatId = chatId, userId = userId)
     }
 }

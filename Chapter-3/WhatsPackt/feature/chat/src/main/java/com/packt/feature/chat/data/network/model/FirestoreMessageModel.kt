@@ -11,10 +11,6 @@ data class FirestoreMessageModel(
     @Transient
     val id: String = "",
 
-    @get:PropertyName("conversationId")
-    @set:PropertyName("conversationId")
-    var conversationId: String = "",
-
     @get:PropertyName("senderId")
     @set:PropertyName("senderId")
     var senderId: String = "",
@@ -49,8 +45,6 @@ data class FirestoreMessageModel(
     fun toDomain(userId: String): Message {
         return Message(
             id = id,
-            conversationId = conversationId,
-            senderId = senderId,
             senderName = senderName,
             senderAvatar = senderAvatar,
             isMine = userId == senderId,

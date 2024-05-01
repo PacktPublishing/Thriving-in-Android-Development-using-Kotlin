@@ -5,11 +5,11 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 class WebsocketMessageModel(
-    val id: String,
+    val id: String? = null,
     val message: String,
     val senderName: String,
     val senderAvatar: String,
-    val timestamp: String,
+    val timestamp: String? = null,
     val isMine: Boolean,
     val messageType: String,
     val messageDescription: String
@@ -21,11 +21,9 @@ class WebsocketMessageModel(
 
         fun fromDomain(message: Message): WebsocketMessageModel {
             return WebsocketMessageModel(
-                id = message.id,
                 message = message.content,
                 senderAvatar = message.senderAvatar,
                 senderName = message.senderName,
-                timestamp = message.timestamp,
                 isMine = message.isMine,
                 messageType = message.fromContentType(),
                 messageDescription = message.contentDescription

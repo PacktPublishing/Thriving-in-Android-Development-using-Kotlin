@@ -64,6 +64,7 @@ class WhatsPacktMessagingService: FirebaseMessagingService() {
 
         // Build the notification
         val notification = NotificationCompat.Builder(this, CHANNEL_ID)
+            .setSmallIcon(R.drawable.notification)
             .setContentTitle(senderName)
             .setContentText(messageContent)
             .setContentIntent(pendingIntent)

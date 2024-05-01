@@ -8,7 +8,6 @@ data class ChatRoomModel(
     val id: String,
     val senderName: String,
     val senderAvatar: String,
-    val senderId: String,
     val lastMessages: List<WebsocketMessageModel>
 ) {
     fun toDomain(): ChatRoom {
@@ -16,7 +15,6 @@ data class ChatRoomModel(
             id = id,
             senderName = senderName,
             senderAvatar = senderAvatar,
-            senderId = senderId,
             lastMessages = lastMessages.map { it.toDomain() }
         )
     }

@@ -10,12 +10,13 @@ import kotlinx.coroutines.flow.callbackFlow
 import javax.inject.Inject
 
 class FirestoreMessagesDataSource @Inject constructor(
-    private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
+    private val firestore: FirebaseFirestoreProvider
 ) {
+
     fun getMessages(chatId: String, userId: String): Flow<Message> = callbackFlow {
 
         // Get a reference to the messages subcollection inside the specified chat
-        val chatRef = firestore.collection("chats").document(chatId).collection("messages")
+        val chatRef = firestore.getFirebaseFirestore().collection("chats").document(chatId).collection("messages")
 
         // Create a query to get the messages ordered by timestamp (ascending)
         val query = chatRef.orderBy("timestamp", Query.Direction.ASCENDING)
@@ -51,7 +52,7 @@ class FirestoreMessagesDataSource @Inject constructor(
     }
 
     fun sendMessage(chatId: String, message: Message) {
-        val chatRef = firestore.collection("chats").document(chatId).collection("messages")
+        val chatRef = firestore.getFirebaseFirestore().collection("chats").document(chatId).collection("messages")
         chatRef.add(FirestoreMessageModel.fromDomain(message))
     }
 }
