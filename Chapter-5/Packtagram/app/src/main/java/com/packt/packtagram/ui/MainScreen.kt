@@ -36,7 +36,7 @@ fun MainScreen(
 ){
     val tabs = generateTabs()
     val selectedIndex = remember { mutableStateOf(0) }
-    val pagerState = rememberPagerState(initialPage = 0)
+    val pagerState = rememberPagerState(initialPage = 0, pageCount = { tabs.size })
 
     Scaffold(
         topBar = {
@@ -68,7 +68,6 @@ fun MainScreen(
             HorizontalPager(
                 modifier = Modifier.padding(innerPadding),
                 state = pagerState,
-                pageCount = tabs.size
             ) { index ->
                 when (index) {
                     0 -> {

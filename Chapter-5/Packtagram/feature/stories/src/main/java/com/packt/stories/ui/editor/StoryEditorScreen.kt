@@ -25,7 +25,8 @@ fun StoryEditorScreen(
         StoryContent(
             isEditing.value,
             onImageCaptured = { viewModel.storePhotoInGallery(it) },
-            onVideoCaptured = {}
+            onVideoCaptured = {
+            }
         )
     }
 }

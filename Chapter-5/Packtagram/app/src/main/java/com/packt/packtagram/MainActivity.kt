@@ -10,6 +10,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.packt.newsfeed.ui.NewsFeed
+import com.packt.packtagram.ui.MainScreen
 import com.packt.packtagram.ui.theme.PacktagramTheme
 import com.packt.stories.ui.editor.StoryContent
 import com.packt.stories.ui.editor.StoryEditorScreen
@@ -24,6 +26,7 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     StoryEditorScreen()
+                    //MainScreen()
                 }
             }
         }

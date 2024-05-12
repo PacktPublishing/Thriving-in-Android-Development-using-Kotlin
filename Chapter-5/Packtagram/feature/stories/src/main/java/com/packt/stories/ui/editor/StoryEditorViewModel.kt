@@ -26,6 +26,7 @@ class StoryEditorViewModel(
     fun storePhotoInGallery(bitmap: Bitmap) {
         viewModelScope.launch {
             saveCaptureUseCase.save(bitmap)
+            _isEditing.value = true
         }
     }
 
