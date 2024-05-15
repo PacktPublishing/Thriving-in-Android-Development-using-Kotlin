@@ -9,11 +9,18 @@ import java.io.File
 class AddCaptionToVideoUseCase() {
 
     suspend fun addCaption(videoFile: File, captionText: String): Result<File> = withContext(Dispatchers.IO) {
-        val outputFile = File(videoFile.parent, videoFile.nameWithoutExtension + "_captioned.mp4")
-        val command = "-i ${videoFile.absolutePath} -vf drawtext=text='$captionText':fontcolor=white:fontsize=24:x=(w-text_w)/2:y=(h-text_h)/2 -codec:a copy ${outputFile.absolutePath}"
+        val outputFile = File(videoFile.parent, "${videoFile.nameWithoutExtension}_captioned.mp4")
+        val fontFilePath = "/system/fonts/Roboto-Regular.ttf"
+        val ffmpegCommand = arrayOf(
+            "-i", videoFile.absolutePath,
+            "-vf", "drawtext=fontfile=$fontFilePath:text='$captionText':fontcolor=white:fontsize=24:x=(w-text_w)/2:y=(h-text_h)-10",
+            "-c:a", "aac",
+            "-b:a", "192k",
+            outputFile.absolutePath
+        )
 
         try {
-            val executionId = FFmpeg.executeAsync(command) { _, returnCode ->
+            val executionId = FFmpeg.executeAsync(ffmpegCommand) { _, returnCode ->
                 if (returnCode != Config.RETURN_CODE_SUCCESS) {
                     Result.failure<AddCaptionToVideoError>(AddCaptionToVideoError)
                 }

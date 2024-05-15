@@ -62,6 +62,7 @@ dependencies {
     implementation(libs.moshi)
     implementation(libs.moshiKotlin)
     implementation(libs.androidx.camera.video)
+    implementation(libs.coil)
     kapt(libs.moshiKotlinCodegen)
     implementation(libs.coroutinesCore)
     implementation(libs.coroutinesAndroid)

@@ -8,6 +8,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import org.koin.androidx.compose.koinViewModel
 
@@ -25,7 +26,15 @@ fun StoryEditorScreen(
         StoryContent(
             isEditing.value,
             onImageCaptured = { viewModel.storePhotoInGallery(it) },
-            onVideoCaptured = {}
+            onVideoCaptured = {
+                viewModel.onVideoCaptured(it)
+
+                //To test the vignette filter uncomment the following line
+                //viewModel.addVignetteFilterToVideo(context)
+
+                //To test the caption uncomment the following line
+                //viewModel.addCaptionToVideo("This is the caption text")
+            }
         )
     }
 }

@@ -96,7 +96,7 @@ private fun CaptureModeContent(
     Box(modifier = Modifier.fillMaxSize()) {
         CameraPermissionRequester {
             Box(contentAlignment = Alignment.BottomCenter, modifier = Modifier.fillMaxSize()) {
-                CameraPreview(
+                CameraPreviewWithImageLabeler(
                     cameraController = cameraController,
                     modifier = Modifier.fillMaxSize()
                 )

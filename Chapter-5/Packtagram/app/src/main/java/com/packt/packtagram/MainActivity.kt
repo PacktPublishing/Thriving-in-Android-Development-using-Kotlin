@@ -26,7 +26,9 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     StoryEditorScreen()
-                    //MainScreen()
+                //Comenting this as in this chapter we will work with the StoryEditor
+                //  and we are not implemeting navigation in this app to focus in the features
+                //  MainScreen()
                 }
             }
         }

@@ -20,7 +20,7 @@ class SaveCaptureUseCase(private val context: Context) {
         private const val DESCRIPTION = "Your description"
     }
 
-    suspend fun save(capturePhotoBitmap: Bitmap): Result<Unit> = withContext(Dispatchers.IO) {
+    suspend fun save(capturePhotoBitmap: Bitmap): Result<Uri> = withContext(Dispatchers.IO) {
         val resolver: ContentResolver = context.applicationContext.contentResolver
         val imageCollection = getImageCollectionUri()
         val nowTimestamp = System.currentTimeMillis()
@@ -61,7 +61,7 @@ class SaveCaptureUseCase(private val context: Context) {
         uri: Uri,
         bitmap: Bitmap,
         contentValues: ContentValues
-    ): Result<Unit> = kotlin.runCatching {
+    ): Result<Uri> = kotlin.runCatching {
         resolver.openOutputStream(uri).use { outputStream ->
             checkNotNull(outputStream) { "Couldn't create file for gallery, MediaStore output stream is null" }
             bitmap.compress(Bitmap.CompressFormat.JPEG, IMAGE_QUALITY, outputStream)
@@ -73,10 +73,10 @@ class SaveCaptureUseCase(private val context: Context) {
             resolver.update(uri, contentValues, null, null)
         }
 
-        Result.success(Unit)
+        return Result.success(uri)
     }.getOrElse { exception ->
         exception.message?.let(::println)
         resolver.delete(uri, null, null)
-        Result.failure(exception)
+        return Result.failure(exception)
     }
 }
