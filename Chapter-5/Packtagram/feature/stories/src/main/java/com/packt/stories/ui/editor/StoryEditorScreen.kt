@@ -19,14 +19,12 @@ fun StoryEditorScreen(
 ) {
     val isEditing = viewModel.isEditing.collectAsState()
     Column(modifier = Modifier.fillMaxSize()) {
-        if (isEditing.value) {
-            TopAppBar(title = { Text(text = "Create Story") })
-        }
         StoryContent(
-            isEditing.value,
+            isEditing = isEditing.value,
+            imageCaptured = viewModel.imageCaptured.collectAsState().value,
             onImageCaptured = { viewModel.storePhotoInGallery(it) },
-            onVideoCaptured = {
-            }
+            onVideoCaptured = {},
+            modifier = Modifier.fillMaxSize()
         )
     }
 }

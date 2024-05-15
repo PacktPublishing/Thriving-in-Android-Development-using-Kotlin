@@ -3,217 +3,272 @@ package com.packt.stories.ui.editor
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Bitmap
+import android.net.Uri
 import android.util.Log
-import android.view.MotionEvent
 import androidx.camera.core.ExperimentalGetImage
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException
 import androidx.camera.core.ImageProxy
-import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.video.FileOutputOptions
 import androidx.camera.video.Recorder
 import androidx.camera.video.Recording
 import androidx.camera.video.VideoCapture
 import androidx.camera.video.VideoRecordEvent
 import androidx.camera.view.LifecycleCameraController
-import androidx.compose.foundation.BorderStroke
+import androidx.camera.view.PreviewView
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.Text
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.input.pointer.pointerInteropFilter
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import androidx.core.util.Consumer
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.packt.stories.R
+import com.packt.stories.ui.filters.BlackAndWhiteFilter
+import com.packt.stories.ui.filters.ImageFilter
 import com.packt.stories.ui.rotateBitmap
 import com.packt.stories.ui.toBitmap
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.io.File
-import java.util.concurrent.Executor
 import java.util.concurrent.Executors
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun StoryContent(
     isEditing: Boolean = false,
+    imageCaptured: Uri? = null,
     onImageCaptured: (Bitmap) -> Any,
     onVideoCaptured: (String) -> Any,
     modifier: Modifier = Modifier,
 ) {
     val localContext = LocalContext.current
-    val cameraProviderFuture = remember { ProcessCameraProvider.getInstance(localContext) }
     var videoCapture: VideoCapture<Recorder>? by remember { mutableStateOf(null) }
     var recording: Recording? by remember { mutableStateOf(null) }
-    val cameraController: LifecycleCameraController =
-        remember { LifecycleCameraController(localContext) }
+    val cameraController = remember { LifecycleCameraController(localContext) }
+    val lifecycleOwner = LocalLifecycleOwner.current
+    val filterApplied = remember { mutableStateOf(ImageFilter.BLACK_AND_WHITE) }
 
-    fun capturePhoto(
-        context: Context,
-        cameraController: LifecycleCameraController,
-        onPhotoCaptured: (Bitmap) -> Unit,
-        onError: (Exception) -> Unit
-    ) {
-        val mainExecutor: Executor = ContextCompat.getMainExecutor(context)
-
-        cameraController.takePicture(
-            mainExecutor,
-            @ExperimentalGetImage object : ImageCapture.OnImageCapturedCallback() {
-                override fun onCaptureSuccess(image: ImageProxy) {
-                    try {
-                        CoroutineScope(Dispatchers.IO).launch {
-                            val correctedBitmap: Bitmap? = image
-                                ?.image
-                                ?.toBitmap()
-                                ?.rotateBitmap(image.imageInfo.rotationDegrees)
-
-                            correctedBitmap?.let {
-                                withContext(Dispatchers.Main) {
-                                    onPhotoCaptured(correctedBitmap)
-                                }
-                            }
-
-                            image.close()
-                        }
-                    } catch (e: Exception) {
-                        onError(e)
-                    } finally {
-                        image.close()
-                    }
-                }
-
-                override fun onError(exception: ImageCaptureException) {
-                    Log.e("CameraContent", "Error capturing image", exception)
-                    onError(exception)
-                }
-            })
+    DisposableEffect(lifecycleOwner) {
+        cameraController.bindToLifecycle(lifecycleOwner)
+        onDispose {
+            cameraController.unbind()
+        }
     }
 
+    if (isEditing) {
+        EditionModeContent(
+            modifier = modifier,
+            imageCaptured = imageCaptured,
+            filterApplied = filterApplied,
+        )
+    } else {
+        CaptureModeContent(cameraController, onImageCaptured)
+    }
+}
 
+@Composable
+private fun CaptureModeContent(
+    cameraController: LifecycleCameraController,
+    onImageCaptured: (Bitmap) -> Any
+) {
     Box(modifier = Modifier.fillMaxSize()) {
         CameraPermissionRequester {
-            videoCapture =
-                cameraVideoPreview(cameraProviderFuture, modifier = Modifier.fillMaxSize())
-        }
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .wrapContentHeight()
-        ) {
-            Button(onClick = { /*Handle back*/ }, modifier = Modifier.align(Alignment.TopStart).padding(6.dp)) {
-                Image(
-                    painter = painterResource(id = R.drawable.ic_arrow_back),
-                    contentDescription = "Back button"
+            Box(contentAlignment = Alignment.BottomCenter, modifier = Modifier.fillMaxSize()) {
+                CameraPreview(
+                    cameraController = cameraController,
+                    modifier = Modifier.fillMaxSize()
+                )
+                CaptureButton(
+                    cameraController = cameraController,
+                    onPhotoCaptured = { bitmap ->
+                        onImageCaptured(bitmap)
+                    },
+                    onError = { exception ->
+                        // Handle any errors
+                    }
                 )
             }
-            if (isEditing) {
-                Button(
-                    onClick = { /* Handle create caption */ },
-                    modifier = Modifier.align(Alignment.TopEnd)
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.ic_caption),
-                        contentDescription = "Create label"
-                    )
-                }
-            }
-        }
-
-        Row(
-            modifier = Modifier
-                .wrapContentHeight()
-                .padding(10.dp)
-                .align(Alignment.BottomCenter)
-        ) {
-            if (isEditing) {
-                Button(onClick = { /* Handle create caption */ }) {
-                    Text(stringResource(id = R.string.share_story))
-                }
-            } else {
-                Button(
-                    onClick = {
-                        Log.d("VideoCapture", "on click")
-
-                        capturePhoto(localContext, cameraController, { bitmap ->
-                            onImageCaptured(bitmap)
-                        }, { exception ->
-                            // Handle error
-                        })
-                    },
-                    modifier = Modifier
-                        .size(50.dp)
-                        .pointerInput("videoCaptureButton") {
-                            detectTapGestures(
-                                onLongPress = {
-                                    Log.d("VideoCapture", "Long press detected")
-                                    videoCapture?.let {
-                                        if (recording == null) {
-                                            recording = startRecording(it, localContext, onVideoCaptured)
-                                        }
-                                    }
-                                },
-                                onPress = {
-                                    Log.d("VideoCapture", "Single press detected")
-                                    try {
-                                        awaitRelease()
-                                    } finally {
-                                        if (recording != null) {
-                                            stopRecording(recording)
-                                            recording = null
-                                        } else {
-                                            // Capture photo
-                                            capturePhoto(localContext, cameraController, { bitmap ->
-                                                onImageCaptured(bitmap)
-                                            }, { exception ->
-                                                // Handle error
-                                            })
-                                        }
-                                    }
-                                }
-                            )
-                        },
-                    shape = CircleShape,
-                    border = BorderStroke(4.dp, MaterialTheme.colorScheme.primary),
-                    contentPadding = PaddingValues(0.dp),
-                ) {
-                }
-            }
-
         }
     }
 }
 
+@Composable
+private fun EditionModeContent(
+    modifier: Modifier,
+    imageCaptured: Uri?,
+    filterApplied: MutableState<ImageFilter>,
+) {
+    Box(modifier = modifier.fillMaxSize()) {
+        imageCaptured?.let {
+            when (filterApplied.value) {
+                ImageFilter.BLACK_AND_WHITE -> {
+                    BlackAndWhiteFilter(imageUri = imageCaptured, modifier = modifier.fillMaxSize())
+                }
+
+                ImageFilter.VIGNETTE -> {
+                    // Apply vignette filter
+                }
+
+                else -> {
+                    imageCaptured?.let {
+                        LocalImageDisplay(
+                            it, modifier = modifier
+                                .align(Alignment.Center)
+                                .fillMaxSize()
+                        )
+                    }
+                    EditionControls()
+                }
+
+            }
+        }
+    }
+}
+
+@Composable
+fun CameraPreview(cameraController: LifecycleCameraController, modifier: Modifier = Modifier) {
+    AndroidView(
+        factory = { context ->
+            PreviewView(context).apply {
+                implementationMode = PreviewView.ImplementationMode.COMPATIBLE
+            }
+        },
+        modifier = modifier,
+        update = { previewView ->
+            previewView.controller = cameraController
+        }
+    )
+}
+
+@Composable
+fun CaptureButton(
+    cameraController: LifecycleCameraController,
+    onPhotoCaptured: (Bitmap) -> Unit,
+    onError: (Exception) -> Unit
+) {
+    val context = LocalContext.current
+    Button(
+        onClick = {
+            capturePhoto(
+                context = context,
+                cameraController = cameraController,
+                onPhotoCaptured = onPhotoCaptured,
+                onError = onError
+            )
+        },
+        modifier = Modifier
+            .size(60.dp)
+            .padding(8.dp),
+        shape = CircleShape
+    ) {
+    }
+}
+
+fun capturePhoto(
+    cameraController: LifecycleCameraController,
+    context: Context,
+    onPhotoCaptured: (Bitmap) -> Unit,
+    onError: (Exception) -> Unit
+) {
+
+    cameraController.takePicture(
+        ContextCompat.getMainExecutor(context),
+        object : ImageCapture.OnImageCapturedCallback() {
+            @androidx.annotation.OptIn(ExperimentalGetImage::class)
+            override fun onCaptureSuccess(imageProxy: ImageProxy) {
+                val image = imageProxy.image
+                image?.let {
+                    val bitmap = image.toBitmap().rotateBitmap(imageProxy.imageInfo.rotationDegrees)
+                    onPhotoCaptured(bitmap)
+                }
+                imageProxy.close()
+            }
+
+            override fun onError(exception: ImageCaptureException) {
+                Log.e("CameraContent", "Error capturing image: ${exception.message}", exception)
+                onError(exception)
+            }
+        }
+    )
+}
+
+@Composable
+fun LocalImageDisplay(imageUri: Uri, modifier: Modifier = Modifier) {
+    AsyncImage(
+        model = ImageRequest.Builder(LocalContext.current)
+            .data(imageUri)
+            .build(),
+        contentDescription = null,
+        modifier = modifier.fillMaxSize(),
+        contentScale = ContentScale.FillBounds
+    )
+}
+
+@Composable
+private fun EditionControls() {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentHeight()
+    ) {
+        Button(
+            onClick = { /*Handle back*/ },
+            modifier = Modifier
+                .align(Alignment.TopStart)
+                .padding(6.dp)
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.ic_arrow_back),
+                contentDescription = "Back button"
+            )
+        }
+        Button(
+            onClick = { /* Handle create caption */ },
+            modifier = Modifier.align(Alignment.TopEnd)
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.ic_caption),
+                contentDescription = "Create label"
+            )
+        }
+        Button(
+            onClick = { /* Handle filter */ },
+            modifier = Modifier.align(Alignment.TopEnd)
+        ) {
+            Icon(Icons.Default.Edit, contentDescription = "Messages")
+        }
+
+    }
+}
+
 @SuppressLint("MissingPermission")
-fun startRecording(videoCapture: VideoCapture<Recorder>, context: Context, onVideoCaptured: (String) -> Any): Recording {
+fun startRecording(
+    videoCapture: VideoCapture<Recorder>,
+    context: Context,
+    onVideoCaptured: (String) -> Any
+): Recording {
     val videoFile = File(context.getExternalFilesDir(null), "video.mp4")
     val outputFileOptions = FileOutputOptions.Builder(videoFile).build()
 

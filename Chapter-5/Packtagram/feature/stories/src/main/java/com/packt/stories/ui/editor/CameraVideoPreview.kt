@@ -18,7 +18,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 import com.google.common.util.concurrent.ListenableFuture
 
 @Composable
-fun cameraVideoPreview(
+fun CameraVideoPreview(
     cameraProviderFuture: ListenableFuture<ProcessCameraProvider>,
     modifier: Modifier = Modifier,
 ): VideoCapture<Recorder> {
@@ -42,6 +42,7 @@ fun cameraVideoPreview(
         cameraProviderState.value = cameraProvider
 
         val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
+
 
         try {
             // Unbind all use cases before rebinding
@@ -74,3 +75,68 @@ fun cameraVideoPreview(
 
     return videoCapture
 }
+
+
+
+/**
+@Composable
+private fun CaptureButton(
+localContext: Context,
+cameraController: LifecycleCameraController,
+onImageCaptured: (Bitmap) -> Any,
+videoCapture: VideoCapture<Recorder>?,
+recording: Recording?,
+onVideoCaptured: (String) -> Any
+) {
+var videoRecording = recording
+
+/**
+Button(
+onClick = {
+Log.d("VideoCapture", "on click")
+
+capturePhoto(localContext, cameraController, { bitmap ->
+onImageCaptured(bitmap)
+}, { exception ->
+// Handle error
+})
+},
+modifier = Modifier
+.size(50.dp)
+.pointerInput("videoCaptureButton") {
+detectTapGestures(
+onLongPress = {
+Log.d("VideoCapture", "Long press detected")
+videoCapture?.let {
+if (videoRecording == null) {
+videoRecording =
+startRecording(it, localContext, onVideoCaptured)
+}
+}
+},
+onPress = {
+Log.d("VideoCapture", "Single press detected")
+try {
+awaitRelease()
+} finally {
+if (recording != null) {
+stopRecording(recording)
+videoRecording = null
+} else {
+// Capture photo
+capturePhoto(localContext, cameraController, { bitmap ->
+onImageCaptured(bitmap)
+}, { exception ->
+// Handle error
+})
+}
+}
+}
+)
+},
+shape = CircleShape,
+border = BorderStroke(4.dp, MaterialTheme.colorScheme.primary),
+contentPadding = PaddingValues(0.dp),
+) {
+}8**/
+} **/
