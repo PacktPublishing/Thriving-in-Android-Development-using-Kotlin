@@ -2,6 +2,7 @@ package com.packt.feature.chat.domain.models
 
 data class Message(
     val id: String? = null,
+    val conversationId: String,
     val senderName: String,
     val senderAvatar: String,
     val timestamp: String? = null,

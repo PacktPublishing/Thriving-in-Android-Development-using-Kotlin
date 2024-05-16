@@ -51,7 +51,8 @@ data class FirestoreMessageModel(
             contentType = Message.ContentType.TEXT,
             content = content,
             contentDescription = "",
-            timestamp = timestamp.toDateString()
+            timestamp = timestamp.toDateString(),
+            conversationId = ""
         )
     }
 

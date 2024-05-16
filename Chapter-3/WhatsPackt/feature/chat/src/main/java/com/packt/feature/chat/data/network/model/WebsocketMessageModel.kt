@@ -12,7 +12,8 @@ class WebsocketMessageModel(
     val timestamp: String? = null,
     val isMine: Boolean,
     val messageType: String,
-    val messageDescription: String
+    val messageDescription: String,
+    val conversationId: String,
 ) {
 
     companion object {
@@ -26,7 +27,8 @@ class WebsocketMessageModel(
                 senderName = message.senderName,
                 isMine = message.isMine,
                 messageType = message.fromContentType(),
-                messageDescription = message.contentDescription
+                messageDescription = message.contentDescription,
+                conversationId = message.conversationId
             )
         }
     }
@@ -40,7 +42,8 @@ class WebsocketMessageModel(
             timestamp = timestamp,
             isMine = isMine,
             contentDescription = messageDescription,
-            contentType = toContentType()
+            contentType = toContentType(),
+            conversationId = conversationId
         )
     }
 

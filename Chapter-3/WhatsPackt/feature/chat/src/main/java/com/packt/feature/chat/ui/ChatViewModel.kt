@@ -97,6 +97,7 @@ class ChatViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             val user = getUserData.getData()
             val message = DomainMessage(
+                conversationId = chatRoom.id,
                 senderAvatar = user.avatar,
                 senderName = user.name,
                 isMine = true,

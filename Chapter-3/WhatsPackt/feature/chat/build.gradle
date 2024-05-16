@@ -58,6 +58,10 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth'
     implementation 'com.google.firebase:firebase-firestore'
     implementation 'com.google.firebase:firebase-messaging'
+    implementation 'com.google.firebase:firebase-storage-ktx'
+
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0"
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.6.0'
 
     implementation 'androidx.compose.foundation:foundation'
     implementation 'androidx.compose.material:material'
@@ -66,6 +70,7 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.5.1'
     implementation "androidx.navigation:navigation-compose:2.5.3"
     implementation "io.coil-kt:coil-compose:2.3.0"
+    implementation 'com.google.code.gson:gson:2.8.8'
 
     implementation "io.ktor:ktor-client-websockets:2.2.4"
     implementation "io.ktor:ktor-client-okhttp:2.2.4"
