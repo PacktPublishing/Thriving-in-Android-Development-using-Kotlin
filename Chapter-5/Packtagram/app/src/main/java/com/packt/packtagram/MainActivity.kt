@@ -25,10 +25,10 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    StoryEditorScreen()
+                StoryEditorScreen()
                 //Comenting this as in this chapter we will work with the StoryEditor
                 //  and we are not implemeting navigation in this app to focus in the features
-                //  MainScreen()
+                // MainScreen()
                 }
             }
         }

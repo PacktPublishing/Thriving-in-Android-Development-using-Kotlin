@@ -59,8 +59,6 @@ dependencies {
     implementation("androidx.media3:media3-ui:1.2.1")
     implementation("androidx.media3:media3-exoplayer:1.2.1")
 
-    //implementation(libs.exoplayer)
-    //implementation(libs.exoplayer.ui)
     implementation(libs.coil)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

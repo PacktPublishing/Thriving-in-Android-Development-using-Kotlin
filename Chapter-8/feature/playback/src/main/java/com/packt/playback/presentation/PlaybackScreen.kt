@@ -80,8 +80,8 @@ fun PlaybackScreen() {
             PlayPauseButton(
                 isPlaying = isPlaying.value,
                 onRewind = { viewModel.rewind() },
-                onFastForward = {viewModel.fastForward() },
-                onPlayPause = {viewModel.togglePlayPause() },
+                onFastForward = { viewModel.fastForward() },
+                onPlayPause = { viewModel.togglePlayPause() },
                 modifier = Modifier.align(Alignment.Center)
             )
 
@@ -153,7 +153,6 @@ fun ProgressBarWithTime(
 }
 
 
-
 @Composable
 fun TopMediaRow(modifier: Modifier = Modifier) {
     Row(
@@ -175,7 +174,7 @@ fun PlayPauseButton(
     onPlayPause: () -> Unit,
     onFastForward: () -> Unit,
     modifier: Modifier = Modifier,
-    ) {
+) {
     Row(
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically,

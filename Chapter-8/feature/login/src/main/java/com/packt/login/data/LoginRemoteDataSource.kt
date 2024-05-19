@@ -26,17 +26,22 @@ class LoginRemoteDataSource(
 
     private fun getError(response: Response<AuthToken>): Throwable {
         return when (response.code()) {
-            401 -> AuthenticationException("Invalid email or password.")
-            403 -> AccessDeniedException("Access denied.")
-            404 -> NotFoundException("Login endpoint not found.")
-            in 500..599 -> ServerException("Server error: ${response.message()}.")
-            else -> HttpException(response.code(), "HTTP error: ${response.code()} ${response.message()}.")
+            401 -> LoginException.AuthenticationException("Invalid email or password.")
+            403 -> LoginException.AccessDeniedException("Access denied.")
+            404 -> LoginException.NotFoundException("Login endpoint not found.")
+            in 500..599 -> LoginException.ServerException("Server error: ${response.message()}.")
+            else -> LoginException.HttpException(
+                response.code(),
+                "HTTP error: ${response.code()} ${response.message()}."
+            )
         }
     }
 }
 
-class AuthenticationException(message: String) : Exception(message)
-class AccessDeniedException(message: String) : Exception(message)
-class NotFoundException(message: String) : Exception(message)
-class ServerException(message: String) : Exception(message)
-class HttpException(val code: Int, message: String) : Exception(message)
+sealed class LoginException(loginErrorMessage: String, val code: Int? = null) : Exception(loginErrorMessage) {
+    class AuthenticationException(message: String) : LoginException(message)
+    class AccessDeniedException(message: String) : LoginException(message)
+    class NotFoundException(message: String) : LoginException(message)
+    class ServerException(message: String) : LoginException(message)
+    class HttpException(code: Int, message: String) : LoginException(message, code)
+}

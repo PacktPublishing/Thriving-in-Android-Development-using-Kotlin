@@ -1,15 +1,12 @@
 package com.packt.playback.presentation
 
 import android.content.Context
-import android.media.AudioMetadata
 import android.net.Uri
 import androidx.annotation.OptIn
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.media3.common.C
-import androidx.media3.common.Format
 import androidx.media3.common.MediaItem
-import androidx.media3.common.MimeTypes
 import androidx.media3.common.Player
 import androidx.media3.common.Timeline
 import androidx.media3.common.util.UnstableApi
@@ -28,7 +25,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class PlaybackViewModel @Inject constructor(): ViewModel() {
+class PlaybackViewModel @Inject constructor() : ViewModel() {
 
     private val _currentPosition = MutableStateFlow<Long>(0L)
     val currentPosition: StateFlow<Long> = _currentPosition
@@ -82,7 +79,11 @@ class PlaybackViewModel @Inject constructor(): ViewModel() {
                     }
                 }
 
-                override fun onPositionDiscontinuity(oldPosition: Player.PositionInfo, newPosition: Player.PositionInfo, reason: Int) {
+                override fun onPositionDiscontinuity(
+                    oldPosition: Player.PositionInfo,
+                    newPosition: Player.PositionInfo,
+                    reason: Int
+                ) {
                     super.onPositionDiscontinuity(oldPosition, newPosition, reason)
                     _currentPosition.value = newPosition.positionMs
                 }

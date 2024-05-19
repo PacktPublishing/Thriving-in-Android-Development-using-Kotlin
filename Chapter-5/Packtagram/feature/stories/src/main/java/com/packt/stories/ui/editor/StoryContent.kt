@@ -50,6 +50,7 @@ import coil.request.ImageRequest
 import com.packt.stories.R
 import com.packt.stories.ui.filters.BlackAndWhiteFilter
 import com.packt.stories.ui.filters.ImageFilter
+import com.packt.stories.ui.filters.ImageWithTextOverlay
 import com.packt.stories.ui.rotateBitmap
 import com.packt.stories.ui.toBitmap
 import java.io.File
@@ -64,11 +65,9 @@ fun StoryContent(
     modifier: Modifier = Modifier,
 ) {
     val localContext = LocalContext.current
-    var videoCapture: VideoCapture<Recorder>? by remember { mutableStateOf(null) }
-    var recording: Recording? by remember { mutableStateOf(null) }
     val cameraController = remember { LifecycleCameraController(localContext) }
     val lifecycleOwner = LocalLifecycleOwner.current
-    val filterApplied = remember { mutableStateOf(ImageFilter.BLACK_AND_WHITE) }
+    val filterApplied = remember { mutableStateOf(ImageFilter.TEXT_OVERLAY) }
 
     DisposableEffect(lifecycleOwner) {
         cameraController.bindToLifecycle(lifecycleOwner)
@@ -96,7 +95,7 @@ private fun CaptureModeContent(
     Box(modifier = Modifier.fillMaxSize()) {
         CameraPermissionRequester {
             Box(contentAlignment = Alignment.BottomCenter, modifier = Modifier.fillMaxSize()) {
-                CameraPreviewWithImageLabeler(
+                CameraPreview(
                     cameraController = cameraController,
                     modifier = Modifier.fillMaxSize()
                 )
@@ -127,8 +126,8 @@ private fun EditionModeContent(
                     BlackAndWhiteFilter(imageUri = imageCaptured, modifier = modifier.fillMaxSize())
                 }
 
-                ImageFilter.VIGNETTE -> {
-                    // Apply vignette filter
+                ImageFilter.TEXT_OVERLAY -> {
+                    ImageWithTextOverlay(imageUri = imageCaptured, modifier = modifier.fillMaxSize())
                 }
 
                 else -> {

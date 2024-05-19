@@ -25,7 +25,6 @@ import dagger.hilt.android.AndroidEntryPoint
 class PlaybackActivity: AppCompatActivity() {
 
     private lateinit var pipActionReceiver: PiPActionReceiver
-    private val castContext = CastContext.getSharedInstance(this)
     private val viewModel: PlaybackViewModel by viewModels()
     private var castSession: CastSession? = null
 
@@ -53,11 +52,13 @@ class PlaybackActivity: AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
+        val castContext = CastContext.getSharedInstance(this)
         castContext.sessionManager.addSessionManagerListener(sessionManagerListener, CastSession::class.java)
     }
 
     override fun onStop() {
         super.onStop()
+        val castContext = CastContext.getSharedInstance(this)
         castContext.sessionManager.removeSessionManagerListener(sessionManagerListener, CastSession::class.java)
     }
 
