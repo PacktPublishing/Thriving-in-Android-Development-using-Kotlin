@@ -53,6 +53,7 @@ coroutinesAndroid = {  group = "org.jetbrains.kotlinx", name = "kotlinx-coroutin
 datastore = { module = "androidx.datastore:datastore-preferences", version.ref = "datastore" }
 exoplayer = { group = "com.androidx.media3", name="media3-exoplayer", version.ref="exoplayer" }
 exoplayerUi = { group = "com.androidx.media3", name="media3-ui", version.ref="exoplayer" }
+exoplayerHLS = { group = "com.androidx.media3", name = "media3-exoplayer-hls", version.ref="exoplayer"}
 mediaRouter = { group = "androidx.mediarouter", name="mediarouter", version.ref="mediarouter"}
 googleCast = { group = "com.google.android.gms", name="play-services-cast-framework", version.ref="google-cast"}
 

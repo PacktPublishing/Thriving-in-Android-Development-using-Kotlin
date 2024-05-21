@@ -14,7 +14,9 @@ import androidx.media3.common.Player
 import androidx.media3.common.Timeline
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.datasource.DefaultHttpDataSource
+import androidx.media3.exoplayer.DefaultRenderersFactory
 import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.exoplayer.source.DefaultMediaSourceFactory
 import androidx.media3.exoplayer.source.MergingMediaSource
 import androidx.media3.exoplayer.source.ProgressiveMediaSource
 import androidx.media3.exoplayer.source.SingleSampleMediaSource
@@ -46,15 +48,20 @@ class PlaybackViewModel @Inject constructor(): ViewModel() {
 
     lateinit var player: ExoPlayer
 
+    var mediaUrl = "https://download.samplelib.com/mp4/sample-30s.mp4"
+
     @OptIn(UnstableApi::class)
     private fun preparePlayerWithMediaSource(exoPlayer: ExoPlayer) {
-        val mediaUrl = "https://download.samplelib.com/mp4/sample-30s.mp4"
-        val subtitleUrl = "https://example.com/subtitles.srt"
+
+        val subtitleUrl = "https://gist.githubusercontent.com/matibzurovski/d690d5c14acbaa399e7f0829f9d6888e/raw/63578ca30e7430be1fa4942d4d8dd599f78151c7/example.srt"
 
         val videoMediaSource = ProgressiveMediaSource.Factory(DefaultHttpDataSource.Factory())
             .createMediaSource(MediaItem.fromUri(mediaUrl))
 
-        val subtitleSource = MediaItem.SubtitleConfiguration.Builder(Uri.parse(subtitleUrl)).build()
+        val subtitleSource = MediaItem.SubtitleConfiguration.Builder(Uri.parse(subtitleUrl))
+            .setMimeType(MimeTypes.APPLICATION_SUBRIP)
+            .setSelectionFlags(C.SELECTION_FLAG_DEFAULT)
+            .build()
 
         val subtitleMediaSource = SingleSampleMediaSource.Factory(DefaultHttpDataSource.Factory())
             .createMediaSource(subtitleSource, C.TIME_UNSET)
@@ -64,8 +71,16 @@ class PlaybackViewModel @Inject constructor(): ViewModel() {
         exoPlayer.prepare()
     }
 
+    @UnstableApi
     fun setupPlayer(context: Context) {
-        player = ExoPlayer.Builder(context).build().also { exoPlayer ->
+        player = ExoPlayer.Builder(context)
+            .setRenderersFactory(
+                DefaultRenderersFactory(context)
+                .setEnableDecoderFallback(true)
+            )
+            .build()
+            .also { exoPlayer ->
+
             preparePlayerWithMediaSource(exoPlayer)
 
             exoPlayer.addListener(object : Player.Listener {

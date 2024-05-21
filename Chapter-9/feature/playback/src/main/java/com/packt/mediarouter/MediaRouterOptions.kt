@@ -20,7 +20,7 @@ fun MediaRouteDiscoveryOptions(mediaRouter: MediaRouter) {
     val context = LocalContext.current
     val routeSelector = remember {
         MediaRouteSelector.Builder()
-            .addControlCategory(MediaControlIntent.CATEGORY_LIVE_VIDEO)
+            .addControlCategory(MediaControlIntent.CATEGORY_REMOTE_PLAYBACK)
             .build()
     }
     val mediaRoutes = remember { mutableStateListOf<MediaRouter.RouteInfo>() }

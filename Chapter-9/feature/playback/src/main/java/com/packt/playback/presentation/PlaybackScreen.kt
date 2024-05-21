@@ -1,8 +1,10 @@
 package com.packt.playback.presentation
 
 import android.content.Context
+import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
+import androidx.annotation.OptIn
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
@@ -43,8 +45,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.PlayerView
+import androidx.media3.ui.SubtitleView
 import androidx.mediarouter.media.MediaRouter
 import com.google.android.gms.cast.MediaLoadOptions
 import com.packt.mediarouter.MediaRouteDiscoveryOptions
@@ -62,8 +66,6 @@ fun PlaybackScreen() {
     val currentPosition = viewModel.currentPosition.collectAsState()
     val duration = viewModel.duration.collectAsState()
     val isCasting = viewModel.isCasting.collectAsState()
-
-    viewModel.setupPlayer(LocalContext.current)
 
     Box(
         modifier = Modifier
@@ -115,7 +117,7 @@ fun PlaybackScreen() {
     }
 }
 
-@Composable
+@OptIn(UnstableApi::class) @Composable
 fun VideoPlayerComposable(
     modifier: Modifier = Modifier,
     player: ExoPlayer
@@ -126,6 +128,7 @@ fun VideoPlayerComposable(
                 layoutParams = ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT)
                 setPlayer(player)
                 useController = false
+                subtitleView?.visibility = View.VISIBLE
             }
         },
         modifier = modifier,

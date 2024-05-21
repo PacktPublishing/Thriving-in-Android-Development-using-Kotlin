@@ -2,6 +2,7 @@ package com.packt.playback.presentation
 
 import android.app.PendingIntent
 import android.app.PictureInPictureParams
+import android.app.PictureInPictureUiState
 import android.app.RemoteAction
 import android.content.Intent
 import android.content.IntentFilter
@@ -12,8 +13,12 @@ import android.util.Rational
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.annotation.OptIn
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.material3.MaterialTheme
+import androidx.media3.common.util.UnstableApi
+import com.google.android.gms.cast.MediaInfo
+import com.google.android.gms.cast.MediaLoadOptions
 import com.google.android.gms.cast.framework.CastContext
 import com.google.android.gms.cast.framework.CastSession
 import com.google.android.gms.cast.framework.SessionManagerListener
@@ -25,11 +30,22 @@ import dagger.hilt.android.AndroidEntryPoint
 class PlaybackActivity: AppCompatActivity() {
 
     private lateinit var pipActionReceiver: PiPActionReceiver
+    private lateinit var castContext: CastContext
     private val viewModel: PlaybackViewModel by viewModels()
     private var castSession: CastSession? = null
 
+    override fun onPictureInPictureModeChanged(isInPictureInPictureMode: Boolean) {
+        super.onPictureInPictureModeChanged(isInPictureInPictureMode)
+    }
+
+    override fun onPictureInPictureUiStateChanged(pipState: PictureInPictureUiState) {
+        super.onPictureInPictureUiStateChanged(pipState)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        castContext = CastContext.getSharedInstance(this)
 
         pipActionReceiver = PiPActionReceiver {
             viewModel.togglePlayPause()
@@ -50,15 +66,15 @@ class PlaybackActivity: AppCompatActivity() {
         }
     }
 
+    @OptIn(UnstableApi::class)
     override fun onStart() {
         super.onStart()
-        val castContext = CastContext.getSharedInstance(this)
+        viewModel.setupPlayer(this)
         castContext.sessionManager.addSessionManagerListener(sessionManagerListener, CastSession::class.java)
     }
 
     override fun onStop() {
         super.onStop()
-        val castContext = CastContext.getSharedInstance(this)
         castContext.sessionManager.removeSessionManagerListener(sessionManagerListener, CastSession::class.java)
     }
 
@@ -93,6 +109,7 @@ class PlaybackActivity: AppCompatActivity() {
         override fun onSessionStarted(session: CastSession, sessionId: String) {
             castSession = session
             updateUIForCastSession(true)
+            loadMedia(session)
         }
 
         override fun onSessionEnded(p0: CastSession, p1: Int) {
@@ -116,6 +133,19 @@ class PlaybackActivity: AppCompatActivity() {
         override fun onSessionEnding(session: CastSession) {}
 
         override fun onSessionSuspended(p0: CastSession, p1: Int) {}
+    }
+
+    private fun loadMedia(castSession: CastSession) {
+        val mediaInfo = MediaInfo.Builder(viewModel.mediaUrl)
+            .setStreamType(MediaInfo.STREAM_TYPE_BUFFERED)
+            .setContentType("video/mp4")
+            .build()
+        val mediaLoadOptions = MediaLoadOptions
+            .Builder()
+            .setAutoplay(true)
+            .setPlayPosition(0)
+            .build()
+        castSession.remoteMediaClient?.load(mediaInfo, mediaLoadOptions)
     }
 
 }
