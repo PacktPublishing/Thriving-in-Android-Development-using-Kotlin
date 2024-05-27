@@ -3,6 +3,8 @@ package com.packt.packtflix
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import com.packt.list.presentation.detail.ItemDetailScreen
+import com.packt.list.presentation.list.MoviesScreenUI
 import com.packt.login.presentation.LoginScreen
 import com.packt.packtflix.ui.theme.PacktflixTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -17,8 +19,8 @@ class MainActivity : ComponentActivity() {
                 // but you can check here the different screens, uncommenting the one you want
                 // to test
 
-                LoginScreen()
-                //MoviesScreenUI()
+                //LoginScreen()
+                MoviesScreenUI()
                 //ItemDetailScreen()
             }
         }
