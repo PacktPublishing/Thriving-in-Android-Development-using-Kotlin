@@ -18,6 +18,7 @@ datastore = "1.0.0"
 hiltNavigation = "1.0.0"
 materialAndroid = "1.8.0"
 coil = "2.4.0"
+exoplayer = "1.2.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -40,7 +41,6 @@ hiltCompiler = { module = "com.google.dagger:hilt-android-compiler", name = "hil
 hiltNavigation = { module = "androidx.hilt:hilt-navigation", version.ref="hiltNavigation"}
 hiltNavigationCompose = { module = "androidx.hilt:hilt-navigation-compose", version.ref="hiltNavigation"}
 coil = { module = "io.coil-kt:coil-compose", name="coil-compose", version.ref="coil"}
-
 retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref="retrofit"}
 retrofitMoshiConverter = { group = "com.squareup.retrofit2", name = "converter-moshi", version.ref="retrofit"}
 moshi = { group = "com.squareup.moshi", name = "moshi", version.ref = "moshi" }
@@ -49,6 +49,8 @@ moshiKotlinCodegen = { group = "com.squareup.moshi", name = "moshi-kotlin-codege
 coroutinesCore = {  group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutines" }
 coroutinesAndroid = {  group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines" }
 datastore = { module = "androidx.datastore:datastore-preferences", version.ref = "datastore" }
+exoplayer = { group = "com.androidx.media3", name="exoplayer", version.ref="exoplayer" }
+exoplayer-ui = { group = "com.androidx.media3", name="media3-ui", version.ref="exoplayer" }
 
 
 [plugins]

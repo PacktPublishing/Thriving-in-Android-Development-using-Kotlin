@@ -30,6 +30,7 @@ class MainActivity : ComponentActivity() {
     override fun onStart() {
         super.onStart()
 
+        //To test playback we are redirecting to the PlaybackActivity automatically
         val intent = Intent(this, PlaybackActivity::class.java)
         startActivity(intent)
     }

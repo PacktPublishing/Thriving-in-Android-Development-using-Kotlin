@@ -68,11 +68,8 @@ import java.util.concurrent.Executor
 import java.util.concurrent.Executors
 
 @Composable
-
 fun StoryContent(
-
     isEditing: Boolean = false,
-
     modifier: Modifier = Modifier
 
 ) {

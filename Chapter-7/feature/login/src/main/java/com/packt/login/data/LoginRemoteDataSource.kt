@@ -45,4 +45,3 @@ sealed class LoginException(loginErrorMessage: String, val code: Int? = null) : 
     class ServerException(message: String) : LoginException(message)
     class HttpException(code: Int, message: String) : LoginException(message, code)
 }
-

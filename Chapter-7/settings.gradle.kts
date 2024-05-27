@@ -1,12 +1,12 @@
 pluginManagement {
     repositories {
-        google {
+        google( {
             content {
                 includeGroupByRegex("com\\.android.*")
                 includeGroupByRegex("com\\.google.*")
                 includeGroupByRegex("androidx.*")
             }
-        }
+        })
         mavenCentral()
         gradlePluginPortal()
     }
@@ -16,6 +16,9 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        maven {
+            setUrl("https://mvnrepository.com/artifact/androidx.media3/media3-ui")
+        }
     }
     versionCatalogs {
         create("versions") {
