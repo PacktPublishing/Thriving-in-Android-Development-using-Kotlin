@@ -22,9 +22,7 @@ fun StoryEditorScreen(
         StoryContent(
             isEditing = isEditing.value,
             imageCaptured = viewModel.imageCaptured.collectAsState().value,
-            onImageCaptured = { viewModel.storePhotoInGallery(it)
-
-                              },
+            onImageCaptured = { viewModel.storePhotoInGallery(it) },
             onVideoCaptured = {},
             modifier = Modifier.fillMaxSize()
         )

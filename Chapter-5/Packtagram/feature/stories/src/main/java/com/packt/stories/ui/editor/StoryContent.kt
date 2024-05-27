@@ -67,7 +67,11 @@ fun StoryContent(
     val localContext = LocalContext.current
     val cameraController = remember { LifecycleCameraController(localContext) }
     val lifecycleOwner = LocalLifecycleOwner.current
-    val filterApplied = remember { mutableStateOf(ImageFilter.TEXT_OVERLAY) }
+
+    // Change this filterApplied value to test any of the other filters
+    // To test the BlackAndWhiteFilter, change the value to ImageFilter.BLACK_AND_WHITE
+    // To test the ImageWithTextOverlay, change the value to ImageFilter.TEXT_OVERLAY
+    val filterApplied = remember { mutableStateOf(ImageFilter.NONE) }
 
     DisposableEffect(lifecycleOwner) {
         cameraController.bindToLifecycle(lifecycleOwner)
