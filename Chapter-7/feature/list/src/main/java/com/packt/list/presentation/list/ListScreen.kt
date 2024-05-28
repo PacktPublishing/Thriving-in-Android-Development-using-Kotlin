@@ -26,7 +26,7 @@ import com.packt.list.presentation.list.model.Movie
 import com.packt.list.presentation.list.model.MoviesViewState
 
 @Composable
-fun MoviesScreenUI(moviesViewState: MoviesViewState = sampleMoviesScreen()) {
+fun MoviesScreen(moviesViewState: MoviesViewState = sampleMoviesScreen()) {
     Scaffold(
         containerColor = Color.Black,
         topBar = { PacktflixTopBar() },
@@ -85,80 +85,89 @@ fun MovieCard(movie: Movie) {
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {
-    MoviesScreenUI(moviesViewState = sampleMoviesScreen())
+    MoviesScreen(moviesViewState = sampleMoviesScreen())
 }
 
 
 // This function is just for previewing and testing
 fun sampleMoviesScreen(): MoviesViewState {
     return MoviesViewState(
-        listOf(
-            Genre("Comedy", listOf(
-                Movie(
-                    1,
-                    "The Hangover",
-                    "https://upload.wikimedia.org/wikipedia/en/b/b9/Hangoverposter09.jpg"
-                ),
-                Movie(
-                    2,
-                    "Superbad",
-                    "https://upload.wikimedia.org/wikipedia/en/8/8b/Superbad_Poster.png"
-                ),
-                Movie(
-                    3,
-                    "Step Brothers",
-                    "https://upload.wikimedia.org/wikipedia/en/d/d9/StepbrothersMP08.jpg"
-                ),
-                Movie(
-                    4,
-                    "Anchorman",
-                    "https://upload.wikimedia.org/wikipedia/en/6/64/Movie_poster_Anchorman_The_Legend_of_Ron_Burgundy.jpg"
+        genres = listOf(
+            Genre(
+                name = "Comedy",
+                movies = listOf(
+                    Movie(
+                        id = 1,
+                        title = "The Hangover",
+                        imageUrl = "https://upload.wikimedia.org/wikipedia/en/b/b9/Hangoverposter09.jpg"
+                    ),
+                    Movie(
+                        id = 2,
+                        title = "Superbad",
+                        imageUrl = "https://upload.wikimedia.org/wikipedia/en/8/8b/Superbad_Poster.png"
+                    ),
+                    Movie(
+                        id = 3,
+                        title = "Step Brothers",
+                        imageUrl = "https://upload.wikimedia.org/wikipedia/en/d/d9/StepbrothersMP08.jpg"
+                    ),
+                    Movie(
+                        id = 4,
+                        title = "Anchorman",
+                        imageUrl = "https://upload.wikimedia.org/wikipedia/en/6/64/Movie_poster_Anchorman_The_Legend_of_Ron_Burgundy.jpg"
+                    )
                 )
-            )),
-            Genre("Mystery", listOf(
-                Movie(
-                    1,
-                    "Se7en",
-                    "https://upload.wikimedia.org/wikipedia/en/6/68/Seven_%28movie%29_poster.jpg"
-                ),
-                Movie(
-                    2,
-                    "Zodiac",
-                    "https://upload.wikimedia.org/wikipedia/en/3/3a/Zodiac2007Poster.jpg"
-                ),
-                Movie(
-                    3,
-                    "Gone Girl",
-                    "https://upload.wikimedia.org/wikipedia/en/0/05/Gone_Girl_Poster.jpg"
-                ),
-                Movie(
-                    4,
-                    "Shutter Island",
-                    "https://upload.wikimedia.org/wikipedia/en/7/76/Shutterislandposter.jpg"
+            ),
+            Genre(
+                name = "Mystery",
+                movies = listOf(
+                    Movie(
+                        id = 1,
+                        title = "Se7en",
+                        imageUrl = "https://upload.wikimedia.org/wikipedia/en/6/68/Seven_%28movie%29_poster.jpg"
+                    ),
+                    Movie(
+                        id = 2,
+                        title = "Zodiac",
+                        imageUrl = "https://upload.wikimedia.org/wikipedia/en/3/3a/Zodiac2007Poster.jpg"
+                    ),
+                    Movie(
+                        id = 3,
+                        title = "Gone Girl",
+                        imageUrl = "https://upload.wikimedia.org/wikipedia/en/0/05/Gone_Girl_Poster.jpg"
+                    ),
+                    Movie(
+                        id = 4,
+                        title = "Shutter Island",
+                        imageUrl = "https://upload.wikimedia.org/wikipedia/en/7/76/Shutterislandposter.jpg"
+                    )
                 )
-            )),
-            Genre("Documentary", listOf(
-                Movie(
-                    1,
-                    "March of the Penguins",
-                    "https://upload.wikimedia.org/wikipedia/en/1/19/March_of_the_penguins_poster.jpg"
-                ),
-                Movie(
-                    2,
-                    "Bowling for Columbine",
-                    "https://upload.wikimedia.org/wikipedia/en/e/e7/Bowling_for_columbine.jpg"
-                ),
-                Movie(
-                    3,
-                    "Blackfish",
-                    "https://upload.wikimedia.org/wikipedia/en/b/bd/BLACKFISH_Film_Poster.jpg"
-                ),
-                Movie(
-                    4,
-                    "An Inconvenient Truth",
-                    "https://upload.wikimedia.org/wikipedia/en/1/19/An_Inconvenient_Truth_Film_Poster.jpg"
+            ),
+            Genre(
+                name = "Documentary",
+                movies = listOf(
+                    Movie(
+                        id = 1,
+                        title = "March of the Penguins",
+                        imageUrl = "https://upload.wikimedia.org/wikipedia/en/1/19/March_of_the_penguins_poster.jpg"
+                    ),
+                    Movie(
+                        id = 2,
+                        title = "Bowling for Columbine",
+                        imageUrl = "https://upload.wikimedia.org/wikipedia/en/e/e7/Bowling_for_columbine.jpg"
+                    ),
+                    Movie(
+                        id = 3,
+                        title = "Blackfish",
+                        imageUrl = "https://upload.wikimedia.org/wikipedia/en/b/bd/BLACKFISH_Film_Poster.jpg"
+                    ),
+                    Movie(
+                        id = 4,
+                        title = "An Inconvenient Truth",
+                        imageUrl = "https://upload.wikimedia.org/wikipedia/en/1/19/An_Inconvenient_Truth_Film_Poster.jpg"
+                    )
                 )
-            ))
+            )
         )
     )
 }
