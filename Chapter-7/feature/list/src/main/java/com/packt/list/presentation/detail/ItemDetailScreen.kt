@@ -197,7 +197,7 @@ fun CastAndCreatorsList(cast: List<String>, creators: List<String>) {
         Spacer(modifier = Modifier.height(16.dp))
 
         Text(
-            text = "Creada por",
+            text = "Created by",
             style = MaterialTheme.typography.titleMedium,
             color = Color.White,
             modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)

@@ -7,7 +7,7 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 
 object RetrofitInstance {
 
-    private const val BASE_URL = "https://packtagram.com/"
+    private const val BASE_URL = "https://api.mockfly.dev/mocks/09e4e43e-7992-4dd7-b99f-e168667a240e/"
 
     val moshi = Moshi.Builder()
         .add(KotlinJsonAdapterFactory())

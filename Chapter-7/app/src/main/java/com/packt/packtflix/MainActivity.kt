@@ -20,8 +20,8 @@ class MainActivity : ComponentActivity() {
                 // to test
 
                 //LoginScreen()
-                MoviesScreen()
-                //ItemDetailScreen()
+                //MoviesScreen()
+                ItemDetailScreen()
             }
         }
     }
