@@ -29,8 +29,8 @@ fun StoryEditorScreen(
             onVideoCaptured = {
                 viewModel.onVideoCaptured(it)
 
-                //To test the vignette filter uncomment the following line
-                //viewModel.addVignetteFilterToVideo(context)
+                // To test the vignette filter uncomment the following line
+                //viewModel.addVignetteFilterToVideo()
 
                 //To test the caption uncomment the following line
                 //viewModel.addCaptionToVideo("This is the caption text")
