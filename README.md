@@ -1,6 +1,6 @@
 # Thriving in Android Development Using Kotlin
 
-<a href="[Packt UTM URL of the Book](https://www.packtpub.com/en-in/product/thriving-in-android-development-using-kotlin-9781837631292)"><img src="https://content.packt.com/_/image/original/B19443/cover_image_large.jpg" alt="Book Name" height="256px" align="right"></a>
+<a href="https://www.packtpub.com/en-in/product/thriving-in-android-development-using-kotlin-9781837631292"><img src="https://content.packt.com/_/image/original/B19443/cover_image_large.jpg" alt="Book Name" height="256px" align="right"></a>
 
 This is the code repository for [Thriving in Android Development Using Kotlin](https://www.packtpub.com/en-in/product/thriving-in-android-development-using-kotlin-9781837631292), published by Packt.
 
